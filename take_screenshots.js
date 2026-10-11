@@ -41,7 +41,19 @@ async function run() {
   await new Promise((r) => setTimeout(r, 1000))
   await page.screenshot({ path: 'c:/E/ichsan/tugas/screenshot_imk_3_documents.png' })
 
-  console.log('All 3 screenshots captured successfully!')
+  // 4. Screenshot System Metrics
+  console.log('Capturing System Metrics page...')
+  await page.goto('http://127.0.0.1:5173/web/#/admin/metrics', { waitUntil: 'networkidle0' })
+  await new Promise((r) => setTimeout(r, 1000))
+  await page.screenshot({ path: 'c:/E/ichsan/tugas/screenshot_imk_4_metrics.png' })
+
+  // 5. Screenshot Audit Log
+  console.log('Capturing Audit Log page...')
+  await page.goto('http://127.0.0.1:5173/web/#/audit/logs', { waitUntil: 'networkidle0' })
+  await new Promise((r) => setTimeout(r, 1000))
+  await page.screenshot({ path: 'c:/E/ichsan/tugas/screenshot_imk_5_audit.png' })
+
+  console.log('All 5 screenshots captured successfully!')
   await browser.close()
 }
 
