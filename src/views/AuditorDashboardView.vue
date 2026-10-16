@@ -4,7 +4,7 @@
     <AppNavbar variant="auditor" :show-top-logout="true" title-override="Chatbot Cerdas & Aman" />
 
     <!-- Main Content Full Width -->
-    <main class="flex-1 max-w-7xl mx-auto w-full p-8 md:p-10">
+    <main class="flex-1 max-w-7xl mx-auto w-full p-4 md:p-10">
       <!-- Title & Export to CSV -->
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>

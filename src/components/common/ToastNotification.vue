@@ -9,28 +9,29 @@
   >
     <div 
       v-if="toastState.visible"
-      class="fixed top-6 right-6 z-50 bg-white border border-gray-900 rounded-2xl p-4 shadow-xl min-w-[300px] max-w-sm pointer-events-auto"
+      class="fixed top-6 right-6 z-50 bg-white border border-gray-100 rounded-2xl p-4 shadow-xl shadow-blue-500/5 min-w-[280px] max-w-sm pointer-events-auto flex items-start gap-3"
     >
-      <div class="flex items-start justify-between">
-        <div class="flex items-center gap-2">
-          <!-- Info Circle Icon -->
-          <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          <span class="font-bold text-gray-900 text-sm tracking-tight">{{ toastState.title }}</span>
-        </div>
-        <button 
-          @click="hideToast"
-          class="text-gray-500 hover:text-gray-900 transition p-0.5 rounded"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
+      <!-- Blue Status Icon -->
+      <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
       </div>
-      <div class="mt-1 text-sm text-gray-700 pl-7 font-normal">
-        {{ toastState.message }}
+
+      <div class="flex-1 text-left">
+        <h4 class="font-bold text-gray-900 text-xs tracking-tight">{{ toastState.title }}</h4>
+        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">{{ toastState.message }}</p>
       </div>
+
+      <button 
+        @click="hideToast"
+        class="text-gray-400 hover:text-gray-700 transition p-1 rounded-lg hover:bg-gray-50 cursor-pointer -mr-1 -mt-1"
+        title="Tutup Notifikasi"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
     </div>
   </transition>
 </template>

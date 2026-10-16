@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-[#EDF2FE] flex flex-col justify-center items-center p-4">
     <!-- Login Card Matching L-001 -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 max-w-md w-full text-left">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-10 max-w-md w-full text-left">
       <!-- Robot Logo -->
       <div class="flex justify-center mb-4">
         <div class="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-sm">
@@ -13,7 +13,62 @@
 
       <!-- Heading -->
       <h1 class="text-2xl font-bold text-gray-900 text-center tracking-tight">Chatbot Aman & Cerdas</h1>
-      <p class="text-sm text-gray-500 text-center mt-1 mb-7">Sistem Dokumen Internal</p>
+      <p class="text-sm text-gray-500 text-center mt-1 mb-6">Sistem Dokumen Internal</p>
+
+      <!-- Role Selection Pill Tabs (Demo Options) -->
+      <div class="mb-5">
+        <label class="block text-xs font-semibold text-gray-500 tracking-wider mb-2">
+          Pilih Peran Akses (Demo)
+        </label>
+        <div class="grid grid-cols-3 gap-1.5 p-1 bg-gray-100 rounded-xl">
+          <button 
+            type="button"
+            @click="selectRoleTab('user')"
+            :class="[
+              'py-2 px-2 text-xs font-semibold rounded-lg transition text-center truncate',
+              selectedRoleKey === 'user' ? 'bg-white text-blue-600 shadow-xs' : 'text-gray-600 hover:text-gray-900'
+            ]"
+          >
+            Karyawan
+          </button>
+          <button 
+            type="button"
+            @click="selectRoleTab('admin')"
+            :class="[
+              'py-2 px-2 text-xs font-semibold rounded-lg transition text-center truncate',
+              selectedRoleKey === 'admin' ? 'bg-white text-blue-600 shadow-xs' : 'text-gray-600 hover:text-gray-900'
+            ]"
+          >
+            Admin
+          </button>
+          <button 
+            type="button"
+            @click="selectRoleTab('auditor')"
+            :class="[
+              'py-2 px-2 text-xs font-semibold rounded-lg transition text-center truncate',
+              selectedRoleKey === 'auditor' ? 'bg-white text-blue-600 shadow-xs' : 'text-gray-600 hover:text-gray-900'
+            ]"
+          >
+            Auditor
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Auto-Fill Helper Pill -->
+      <div class="mb-4 bg-blue-50/70 border border-blue-100 rounded-xl p-2.5 flex items-center justify-between text-xs">
+        <div class="text-blue-800">
+          <span class="font-medium text-gray-500">Demo: </span>
+          <span class="font-semibold text-blue-900">{{ currentDemoInfo.username }}</span> / 
+          <span class="font-mono text-gray-600">{{ currentDemoInfo.password }}</span>
+        </div>
+        <button 
+          type="button"
+          @click="autoFillDemo"
+          class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-xs shadow-2xs transition active:scale-95 cursor-pointer"
+        >
+          Isi Otomatis
+        </button>
+      </div>
 
       <!-- Form -->
       <form @submit.prevent="handleLogin" class="space-y-4">
@@ -23,6 +78,7 @@
             v-model="username" 
             type="text" 
             placeholder="Masukkan username"
+            required
             class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
           />
         </div>
@@ -34,6 +90,7 @@
               v-model="password" 
               :type="showPassword ? 'text' : 'password'" 
               placeholder="Masukkan password"
+              required
               class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-11 transition"
             />
             <button 
@@ -75,35 +132,52 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { switchRole } from '../stores/authStore'
+import { authState, loginWithCredentials } from '../stores/authStore'
 
 const router = useRouter()
+const selectedRoleKey = ref('user')
 const username = ref('')
 const password = ref('')
 const showPassword = ref(false)
 const hasError = ref(false)
 
+const currentDemoInfo = computed(() => {
+  return authState.demoAccounts[selectedRoleKey.value] || authState.demoAccounts.user
+})
+
+function selectRoleTab(roleKey) {
+  selectedRoleKey.value = roleKey
+  autoFillDemo()
+}
+
+function autoFillDemo() {
+  const demo = currentDemoInfo.value
+  username.value = demo.username
+  password.value = demo.password
+  hasError.value = false
+}
+
+// Initial autofill on load with user
+onMounted(() => {
+  autoFillDemo()
+})
+
 function handleLogin() {
   hasError.value = false
 
-  // If user enters invalid password or empty, or "error" to trigger L-003
   if (username.value.toLowerCase() === 'error' || password.value.toLowerCase() === 'salah') {
     hasError.value = true
     return
   }
 
-  if (username.value.toLowerCase().includes('admin')) {
-    switchRole('admin')
-    router.push('/admin/metrics')
-  } else if (username.value.toLowerCase().includes('audit')) {
-    switchRole('auditor')
-    router.push('/audit/logs')
+  const redirectUrl = loginWithCredentials(username.value, password.value)
+
+  if (redirectUrl) {
+    router.push(redirectUrl)
   } else {
-    // Default to user chat
-    switchRole('user')
-    router.push('/chat')
+    hasError.value = true
   }
 }
 </script>

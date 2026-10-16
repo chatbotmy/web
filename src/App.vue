@@ -5,9 +5,13 @@
 
     <!-- Global Toast Notification matching screenshot popup -->
     <ToastNotification />
+
+    <!-- Global Confirmation Modal for deletion dialogs -->
+    <ConfirmModal />
   </div>
 </template>
 
 <script setup>
 import ToastNotification from './components/common/ToastNotification.vue'
+import ConfirmModal from './components/common/ConfirmModal.vue'
 </script>

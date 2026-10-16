@@ -2,12 +2,12 @@ import { reactive } from 'vue'
 
 export const toastState = reactive({
   visible: false,
-  title: 'Notification',
+  title: 'Pemberitahuan',
   message: '',
   timeoutId: null,
 })
 
-export function showToast(message, title = 'Notification', duration = 3000) {
+export function showToast(message, title = 'Berhasil', duration = 3000) {
   if (toastState.timeoutId) {
     clearTimeout(toastState.timeoutId)
   }
